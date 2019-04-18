@@ -2,8 +2,14 @@ import React from 'react'
 import axios from 'axios'
 import '../../config'
 import {withRouter } from 'react-router-dom'
+import { loadData } from '../../redux/user.redux'
+import { connect } from 'react-redux';
 
 @withRouter
+@connect(
+    null,
+    { loadData }    
+)
 class AuthRoute extends React.Component {
     componentDidMount() {
         const publicList = ['./login','register']
@@ -14,13 +20,14 @@ class AuthRoute extends React.Component {
         // 获取用户信息
         axios.get('/user/info')
             .then(res => {
-                if (res.status == 200) {
-                    if (res.data.code == 0) {
+                if (res.status === 200) {
+                    if (res.data.code === 0) {
                         // 有登录信息的
+                        this.props.loadData(res.data.data)
                     } else {
                         // 由于该组件不是一个路由组件，所以打印 this.props.history 会显示 undefined
                         // 所以引入 react-router-dom 的 withRouter 来过
-                        console.log(this.props.history.push('/login'))
+						this.props.history.push('/login')
                     }
                     console.log(res.data)
                 }
