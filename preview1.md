@@ -1,4 +1,4 @@
-> 关于登录注册，以及对react的使用做一个 **preview**
+> 关于登录注册，以及对react的一些使用做一个 **preview**
 
 
 #### server 文件夹
@@ -56,3 +56,33 @@
     * @connect 装饰器：使用connect可以把state和dispatch绑定到react组件，使得组件可以访问到redux的数据
     * withRouter 可以 使得 非路由组件 获取路由信息
 
+结构：
+
+```
+        Provider
+            |     传递store，使用applyMiddleware开启thunk中间件
+            |
+        BrowserRouter
+            |
+            |
+        AuthRoute       做鉴权作用的组件
+            |
+            |
+路由组件   Route----> Login          
+            |
+            |------> Register        
+
+```
+* 在登录注册成功的时候记录cookie，在我们登录成功的时候会跳转到一个info页面，这个info首先会判断cookie中userid是否存在（```一个细节处理是用mongo的id作为userid```），如果存在，则返回json 为 code:1 如果 cookie不存在就去数据库查找
+
+* 项目中有一些细节处理
+    * mongo返回来的doc 可以 filter 一些字段
+    * 解构赋值很好用
+    * md5 双重加密
+
+
+#### 总结
+* 做项目过程中一些组件化的思想能够理解，和vue不同的一点在于 路由组件和非路由组件 的区分 很明显
+* 用到装饰器（转化组件 思想）
+* redux这块还是有很多概念 需要好好理解，和vue中的有相同，比如vue中提交状态用的是mutation，而react用的是dispatch，两者具体有哪些区分，后面还需要好好了解才是。
+* 学到 代理 访问不同端口的服务
