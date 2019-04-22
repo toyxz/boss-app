@@ -17,12 +17,16 @@ const models = {
         // 职位名
         'title': {'type':String},
         // 如果你是boss 还有两个字段
-        'component': {'type':String},
+        'company': {'type':String},
         'money': {'type':String}
-
     },
     chat: {
-
+        'chatid':{'type':String,require:true},
+        'from':{type: String,require:true},
+        'read': {type: Boolean,'require':true},
+        'to':{type:String,require:true},
+        'connect': {type:String,require:true,default:''},
+        'create_time':{type:Number,default:new Date().getTime()}
     }
 }
 
