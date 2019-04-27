@@ -23,9 +23,9 @@ const models = {
     chat: {
         'chatid':{'type':String,require:true},
         'from':{type: String,require:true},
-        'read': {type: Boolean,'require':true},
+        'read': {type: Boolean,'require':false},
         'to':{type:String,require:true},
-        'connect': {type:String,require:true,default:''},
+        'content': {type:String,require:true,default:''},
         'create_time':{type:Number,default:new Date().getTime()}
     }
 }

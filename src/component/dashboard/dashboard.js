@@ -1,23 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NavBar } from 'antd-mobile'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route,Redirect } from 'react-router-dom'
 import  NavLinkBar  from '../navlink/navlink'
 import Boss from '../../component/boss/boss'
 import Genius from '../../component/genius/genius'
 import User from '../../component/user/user'
+import Msg from '../msg/msg.js'
+
+import {getMegList,recvmsg} from '../../redux/chat.redux'
 
 
 
 
-function Msg() {
-    return <h2>消息列表页面</h2> 
-}
+
 
 @connect(
-    state => state
+    state => state,
+    {getMegList,recvmsg} 
 )
 class Dashboard extends React.Component {
+    componentDidMount() {
+        if (!this.props.chat.chatmsg.length) {
+            this.props.getMegList()
+            this.props.recvmsg()
+        }
+    }
     render() {
         const { pathname } = this.props.location
         const user = this.props.user
@@ -53,9 +61,11 @@ class Dashboard extends React.Component {
                 component: User,
             }
         ]
+        const page = navList.find(v=>v.path===pathname);
         return (
+            page?
             <div>
-				<NavBar className='fixd-header' mode='dard'>{navList.find(v=>v.path===pathname).title}</NavBar>
+				<NavBar className='fixd-header' mode='dard'>{page.title}</NavBar>
                 <div style={{marginTop:45}}>
                     <Switch>
                         {navList.map(v => (
@@ -64,7 +74,7 @@ class Dashboard extends React.Component {
                     </Switch>
                 </div>
                 <NavLinkBar data={navList}></NavLinkBar>
-            </div>
+            </div> : <Redirect to='/login'></Redirect>
         )
     }
 }

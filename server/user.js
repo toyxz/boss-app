@@ -2,8 +2,9 @@ const express = require('express')
 const utils = require('utility')
 const Router = express.Router()
 const model = require('./model')
-
 const User = model.getModel('user')
+const Chat = model.getModel('chat')
+
 const _filter = {'pwd':0,'__v':0}
 
 Router.get('/list',function(req,res) {
@@ -12,6 +13,30 @@ Router.get('/list',function(req,res) {
         return res.json({code:0,data:doc})
     })
 })
+Router.get('/getmsglist',function(req,res) {
+    const user = req.cookies.user
+    User.find({},function(err,userdoc) {
+        let users = {}
+        userdoc.forEach(v=>{
+            users[v._id] = {name: v.user,avatar:v.avatar }
+        })
+        // Chat.find({'$or':[{from:user,to:user}]},function(err,doc) {
+        //     console.log(doc)
+        //     if (!err) {
+        //         return res.json({code:0,msgs:doc,users:users})
+        //     }
+        // })
+        // 上面这段代码才是视频里的代码，但是这里发现数据没有说 from 和 to 一致的情况 所以 msg 就会返回空 但是 我们又不能让msg返回空。。。所以我采取下面的方法
+        Chat.find({},function(err,doc) {
+            if (!err) {
+                return res.json({code:0,msgs:doc,users:users})
+            }
+        })
+    })
+    // 
+
+})
+
 Router.post('/register',function(req,res) {
     const { user,pwd, type } = req.body
     User.findOne({user},function(err,doc){
@@ -52,6 +77,19 @@ Router.get('/info',function(req,res) {
         if (doc) {
             return res.json({code:0,data:doc})
         }
+    })
+})
+Router.post('/readmsg',function(req,res) {
+    const {userid} = req.cookies
+    const {from} = req.body
+    Chat.update({from,to:userid},
+        {'$set':{read:true}},
+        {'multi':true},
+        function(err,doc) {
+            if (!err) {
+                return res.json({code:0,num:doc.nModified})
+            } 
+            return res.json({code:1,msg:'修改失败'})
     })
 })
 Router.post('/update',function(req,res){
