@@ -148,6 +148,7 @@ io.emit 触发事件
 
 -----
 
+
 为什么在切换联系人的时候，发送消息会渲染多条？
 ```js
 // 这是由于每次切换的时候会执行到 componentDidMount 就会重新获取，把这个获取信息的代码 放在 if 语句中即可
@@ -297,7 +298,7 @@ export function createStore(reducer) {
     }
     function dispatch(action) {
         currentState = reducer(currentState,action)
-        currentListeners.forEach(=>v())
+        currentListeners.forEach(v=>v())
         return action
     }
     // 由于有初始状态，所以一开始需要手动dispatch一下
@@ -309,7 +310,7 @@ export function createStore(reducer) {
 ```
 #### React-Redux
 * connect
-* provider provider
+* provider 
 
 connect 本质上就是一个函数
 ```js
@@ -392,11 +393,11 @@ export function bindActionCreators(creators,dispatch) {
         bound[v] = bindActionCreator(creator,dispatch)
     })
     return bound
-    // 另一种写法
-    return  Object.keys(creators).reduce((ret,item) => {
-        ret[item] = bindActionCreator(creator[item],dispatch)
-        return ret
-    },{})
+    // // 另一种写法
+    // return  Object.keys(creators).reduce((ret,item) => {
+    //     ret[item] = bindActionCreator(creator[item],dispatch)
+    //     return ret
+    // },{})
 }
 ```
 
@@ -908,7 +909,7 @@ res.send(pageHtml)
 ## React16新特性
 新版本带来的优化和新功能
 * 新的核心算法Fiber
-    * 渲染一部分，然后将主线程交出来，再渲染一部分，再叫出来。。。
+    * 渲染一部分，然后将主线程交出来，再渲染一部分，再交出来。。。
     * 更友好
 * Render 可以返回数组，字符串
 * 错误处理机制
@@ -936,4 +937,4 @@ res.send(pageHtml)
     * 之前版本的renderToString，解析为字符串
     * 新版本的renderToodeStream解析为可读的字节流对象
     * 使用ReactDom.hydate取代render
-* 提及更小，MIT协议
+* 体积更小，MIT协议
